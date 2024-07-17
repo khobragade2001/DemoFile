@@ -11,7 +11,8 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y unzip wget xvfb libxi6 libgconf-2-4
-            wget -N https://chromedriver.storage.googleapis.com/88.0.4324.96/chromedriver_linux64.zip
+            sudo rm /usr/local/bin/chromedriver || true
+            wget -N https://chromedriver.storage.googleapis.com/126.0.6478.182/chromedriver_linux64.zip
             sudo unzip chromedriver_linux64.zip -d /usr/local/bin
             sudo chmod +x /usr/local/bin/chromedriver
             sudo wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -19,6 +20,11 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y google-chrome-stable
             pip install selenium
+      - run:
+          name: Set Permissions for X11
+          command: |
+            sudo mkdir -p /tmp/.X11-unix
+            sudo chmod 1777 /tmp/.X11-unix
       - run:
           name: Run explicit_wait.py
           command: |
