@@ -5,6 +5,11 @@ jobs:
       - image: cimg/python:3.11
     steps:
       - checkout
+      - run:
+      name: Install Dependencies
+      command: |
+        pip install selenium
+
       - run: python explicit_wait.py
 
 
