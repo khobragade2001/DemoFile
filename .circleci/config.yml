@@ -5,7 +5,7 @@ jobs:
       - image: cimg/python:3.11
     steps:
       - checkout
-      - run: python addition.py
+      - run: python explicit_wait.py
 
 
   test:
@@ -13,7 +13,7 @@ jobs:
       - image: cimg/python:3.11
     steps:
       - checkout
-      - run: python test.py
+      - run: python explicit_wait.py
 
 workflows:
   build_and_test:
