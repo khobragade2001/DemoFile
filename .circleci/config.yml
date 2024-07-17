@@ -19,12 +19,8 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y google-chrome-stable
             pip install selenium
-      - run:
-          name: Run explicit_wait.py
-          command: |
-            Xvfb :99 -screen 0 1920x1080x24 &
-            export DISPLAY=:99
-            python explicit_wait.py
+      - run: python explicit_wait.py
+
 
 workflows:
   version: 2
