@@ -1,30 +1,32 @@
 version: 2.1
+
 jobs:
-  build:
-    docker:
-      - image: cimg/python:3.11
-    steps:
-      - run:
-      name: Install Dependencies
-      command: |
-        pip install selenium
-
-      - run: python explicit_wait.py
-
-
   test:
     docker:
-      - image: cimg/python:3.11
+      - image: circleci/python:3.8
     steps:
       - checkout
-      - run: python explicit_wait.py
+      - run:
+          name: Install Dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y unzip wget xvfb libxi6 libgconf-2-4
+            wget -N https://chromedriver.storage.googleapis.com/88.0.4324.96/chromedriver_linux64.zip
+            unzip chromedriver_linux64.zip -d /usr/local/bin
+            sudo wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+            sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+            sudo apt-get update
+            sudo apt-get install -y google-chrome-stable
+            pip install selenium
+      - run:
+          name: Run explicit_wait.py
+          command: |
+            Xvfb :99 -screen 0 1920x1080x24 &
+            export DISPLAY=:99
+            python explicit_wait.py
 
 workflows:
-  build_and_test:
+  version: 2
+  test:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
-
-
+      - test
