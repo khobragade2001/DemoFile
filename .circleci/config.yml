@@ -7,18 +7,32 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Dependencies
+          name: Update APT and Install Dependencies
           command: |
             sudo apt-get update
             sudo apt-get install -y unzip wget xvfb libxi6 libgconf-2-4
-            sudo rm /usr/local/bin/chromedriver || true
+      - run:
+          name: Remove Existing Chromedriver
+          command: |
+            if [ -f /usr/local/bin/chromedriver ]; then
+              sudo rm -f /usr/local/bin/chromedriver
+            fi
+      - run:
+          name: Download and Install Chromedriver
+          command: |
             wget -N https://chromedriver.storage.googleapis.com/126.0.6478.182/chromedriver_linux64.zip
-            sudo unzip chromedriver_linux64.zip -d /usr/local/bin
+            sudo unzip -o chromedriver_linux64.zip -d /usr/local/bin
             sudo chmod +x /usr/local/bin/chromedriver
+      - run:
+          name: Install Google Chrome
+          command: |
             sudo wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
             sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
             sudo apt-get update
             sudo apt-get install -y google-chrome-stable
+      - run:
+          name: Install Selenium
+          command: |
             pip install selenium
       - run:
           name: Set Permissions for X11
